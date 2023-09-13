@@ -14,7 +14,7 @@ case class AppOptions(
       "-o '%(playlist_index)s-%(title)s.%(ext)s'",
       // "-f 'bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv*+ba/b'",
       "-f bestvideo+bestaudio",
-      "--recode-video mp4",
+      "--remux-video mp4",
       "--fragment-retries infinite -R infinite --file-access-retries infinite",
       s"-N ${conn}"
     )
