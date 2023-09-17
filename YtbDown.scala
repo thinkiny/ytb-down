@@ -7,17 +7,21 @@ case class AppOptions(
     noAutoSub: Boolean = false,
     noProxy: Boolean = false,
     conn: Int = 5,
-    cookie: Boolean = false
+    cookie: Boolean = false,
+    recode: Boolean = false
 ):
   def toArgs(): Seq[String] =
     val args = ListBuffer[String](
       "-o '%(playlist_index)s-%(title)s.%(ext)s'",
       // "-f 'bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv*+ba/b'",
       "-f bestvideo+bestaudio",
-      "--remux-video mp4",
+      // "--remux-video mp4",
       "--fragment-retries infinite -R infinite --file-access-retries infinite",
       s"-N ${conn}"
     )
+
+    if (recode) then args += "--recode-video mp4"
+    else args += "--remux-video mp4"
 
     if (!noAutoSub) then args += "--write-auto-subs --convert-subs srt"
     if (!noProxy) then args += "--proxy http://127.0.0.1:1087"
