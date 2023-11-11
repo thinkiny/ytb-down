@@ -1,7 +1,7 @@
 all: ytb-down
 
 ytb-down: YtbDown.scala
-	scala-cli package $? . -f
+	scala-cli package --assembly $? . -f
 
 clean:
 	rm ytb-down
