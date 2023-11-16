@@ -3,9 +3,6 @@ import caseapp.core.argparser.ArgParser
 import caseapp.core.argparser.SimpleArgParser
 import scala.util.Try
 import caseapp.core.Error.MalformedValue
-
-import ConfigKey.*
-
 object AppOptions:
   given ArgParser[URL] = SimpleArgParser.from[URL]("url") { s =>
     Try(URL(s)).toEither.left.map(t => MalformedValue("URL", t.getMessage()))
@@ -27,12 +24,14 @@ case class AppOptions(
   def toArgs(): String =
     if (list) then "--list-formats"
     else {
-      val userConfig = List.newBuilder[ConfigEntry[_]]
-      if (noAutoSub) userConfig += ConfigEntry(AutoSub, false)
-      if (proxy) userConfig += ConfigEntry(Proxy, false)
-      if (prefix.nonEmpty) userConfig += ConfigEntry(Prefix, prefix)
-      if (format.nonEmpty) userConfig += ConfigEntry(Format, format)
+      val userConfig = List.newBuilder[ConfigEntry[_, _]]
+      if (noAutoSub) userConfig += ConfigEntry[AutoSub, Boolean](false)
+      if (proxy) userConfig += ConfigEntry[Proxy, Boolean](false)
+      if (prefix.nonEmpty)
+        userConfig += ConfigEntry[Prefix, String](prefix)
+      if (format.nonEmpty)
+        userConfig += ConfigEntry[Format, String](format)
       (getPredefConfig() ++ userConfig.result()).values
-        .flatMap(_.toArg)
+        .flatMap(_.arg)
         .mkString(" ")
     }
