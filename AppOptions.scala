@@ -25,12 +25,12 @@ case class AppOptions(
     if (list) then "--list-formats"
     else {
       val userConfig = List.newBuilder[ConfigEntry[_, _]]
-      if (noAutoSub) userConfig += ConfigEntry[AutoSub, Boolean](false)
-      if (proxy) userConfig += ConfigEntry[Proxy, Boolean](false)
+      if (noAutoSub) userConfig += ConfigEntry[AutoSub](false)
+      if (proxy) userConfig += ConfigEntry[Proxy](false)
       if (prefix.nonEmpty)
-        userConfig += ConfigEntry[Prefix, String](prefix)
+        userConfig += ConfigEntry[Prefix](prefix)
       if (format.nonEmpty)
-        userConfig += ConfigEntry[Format, String](format)
+        userConfig += ConfigEntry[Format](format)
       (getPredefConfig() ++ userConfig.result()).values
         .flatMap(_.arg)
         .mkString(" ")

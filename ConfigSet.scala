@@ -1,11 +1,5 @@
 import scala.collection.mutable.HashMap
 
-case class ConfigEntry[K <: ConfigKey, V](value: V)(using
-    ta: ToArg[ConfigEntry[K, V]]
-):
-  val keyName = ConfigKey.getName[K]
-  val arg = ta.toArg(this)
-
 type ConfigMap = HashMap[String, ConfigEntry[_, _]]
 
 class ConfigSet(entries: ConfigEntry[_, _]*):
@@ -17,15 +11,15 @@ class ConfigSet(entries: ConfigEntry[_, _]*):
 
 class DefaultConfig
     extends ConfigSet(
-      ConfigEntry[Connection, Int](5),
-      ConfigEntry[Retry, Boolean](true),
-      ConfigEntry[RemuxMp4, Boolean](true),
-      ConfigEntry[Format, String]("best"),
-      ConfigEntry[Prefix, String]("")
+      ConfigEntry[Connection](5),
+      ConfigEntry[Retry](true),
+      ConfigEntry[RemuxMp4](true),
+      ConfigEntry[Format]("best"),
+      ConfigEntry[Prefix]("")
     )
 
 object ProxyConfig extends DefaultConfig:
-  ++(ConfigEntry[Proxy, Boolean](true), ConfigEntry[AutoSub, Boolean](true))
+  ++(ConfigEntry[Proxy](true), ConfigEntry[AutoSub](true))
 
 object DemosticConfig extends DefaultConfig:
-  ++(ConfigEntry[Cookie, Boolean](true))
+  ++(ConfigEntry[Cookie](true))
