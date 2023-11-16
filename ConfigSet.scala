@@ -14,7 +14,7 @@ class DefaultConfig
     extends ConfigSet(
       ConfigEntry(Connection, 5),
       ConfigEntry(Retry, true),
-      ConfigEntry(Mp4, true),
+      ConfigEntry(RemuxMp4, true),
       ConfigEntry(Format, "best"),
       ConfigEntry(Prefix, "")
     )

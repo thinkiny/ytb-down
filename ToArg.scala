@@ -16,7 +16,7 @@ object ToArgFunc:
         toggle(
           "--fragment-retries infinite -R infinite --file-access-retries infinite"
         )
-      case Mp4 => toggle("--remux-video mp4")
+      case RemuxMp4 => toggle("--remux-video mp4")
       case Prefix =>
         make[String]: p =>
           p match
@@ -39,3 +39,4 @@ object ToArgFunc:
       case Format =>
         make[String]: i =>
           Some(s"-f ${i}")
+      case RecodeMp4 => toggle("--recode-video mp4")
