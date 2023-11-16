@@ -14,15 +14,15 @@ case class AppOptions(
     proxy: Boolean = false,
     prefix: String = "",
     format: String = "",
-    list: Boolean = false
+    listFormat: Boolean = false
 ):
   def getPredefConfig(): ConfigSet =
     url.getHost() match
       case "www.youtube.com" => ProxyConfig
       case _                 => DemosticConfig
 
-  def toArgs(): String =
-    if (list) then "--list-formats"
+  def toYtArgs(): String =
+    if (listFormat) then "--list-formats"
     else {
       val userConfig = List.newBuilder[ConfigEntry[_, _]]
       if (noAutoSub) userConfig += ConfigEntry[AutoSub](false)
@@ -32,6 +32,6 @@ case class AppOptions(
       if (format.nonEmpty)
         userConfig += ConfigEntry[Format](format)
       (getPredefConfig() ++ userConfig.result()).values
-        .flatMap(_.arg)
+        .flatMap(_.ytArg)
         .mkString(" ")
     }

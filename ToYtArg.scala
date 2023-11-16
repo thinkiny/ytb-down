@@ -1,13 +1,13 @@
 import java.nio.file.Paths
 
-trait ToArg[T]:
+trait ToYtArg[T]:
   def toArg(t: T): Option[String]
 
-object ToArg:
-  type ToArgFunc = [K <: ConfigKey, V] =>> ToArg[ConfigEntry[K, V]]
+object ToYtArg:
+  type ToArgFunc = [K <: ConfigKey, V] =>> ToYtArg[ConfigEntry[K, V]]
 
   class ToggleFlag[K <: ConfigKey](flag: String)
-      extends ToArg[ConfigEntry[K, Boolean]]:
+      extends ToYtArg[ConfigEntry[K, Boolean]]:
     def toArg(t: ConfigEntry[K, Boolean]): Option[String] =
       if (t.value) Some(flag) else None
 
