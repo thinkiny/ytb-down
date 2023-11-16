@@ -1,7 +1,7 @@
 enum ConfigKey[V]:
   case Proxy extends ConfigKey[Boolean]
   case AutoSub extends ConfigKey[Boolean]
-  case Prefix extends ConfigKey[Boolean]
+  case Prefix extends ConfigKey[String]
   case Connection extends ConfigKey[Int]
   case Cookie extends ConfigKey[Boolean]
   case Retry extends ConfigKey[Boolean]

@@ -15,7 +15,8 @@ class DefaultConfig
       ConfigEntry(Connection, 5),
       ConfigEntry(Retry, true),
       ConfigEntry(Mp4, true),
-      ConfigEntry(Format, "best")
+      ConfigEntry(Format, "best"),
+      ConfigEntry(Prefix, "")
     )
 
 object ProxyConfig extends DefaultConfig:
