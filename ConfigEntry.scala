@@ -1,14 +1,15 @@
-case class ConfigEntry[K <: ConfigKey, V](value: V)(using
-    ta: ToYtArg[ConfigEntry[K, V]]
-):
-  val keyName = ConfigKey.getName[K]
-  val ytArg = ta.toArg(this)
-
-class ConfigEntryBuilder[K <: ConfigKey]:
-  inline def apply[V](v: V)(using
-      ToYtArg[ConfigEntry[K, V]]
-  ): ConfigEntry[K, V] =
-    ConfigEntry[K, V](v)
+trait ConfigEntry[V]:
+  val key: String
+  val value: V
+  def toYtArg(): Option[String]
 
 object ConfigEntry:
-  inline def apply[K <: ConfigKey] = new ConfigEntryBuilder[K]
+  class Builder[K <: ConfigKey]:
+    inline def apply[V](v: V)(using f: ToYtArg[K, V]): ConfigEntry[V] =
+      new ConfigEntry[V] {
+        val key = ConfigKey.getName[K]
+        val value = v
+        def toYtArg() = f.toArg(v)
+      }
+
+  inline def apply[K <: ConfigKey] = new Builder[K]

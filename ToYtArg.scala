@@ -1,51 +1,48 @@
 import java.nio.file.Paths
 
-trait ToYtArg[T]:
-  def toArg(t: T): Option[String]
+trait ToYtArg[K, V]:
+  def toArg(v: V): Option[String]
 
 object ToYtArg:
-  type ToArgFunc = [K <: ConfigKey, V] =>> ToYtArg[ConfigEntry[K, V]]
+  class ToggleFlag[K <: ConfigKey](flag: String) extends ToYtArg[K, Boolean]:
+    def toArg(v: Boolean): Option[String] =
+      if (v) Some(flag) else None
 
-  class ToggleFlag[K <: ConfigKey](flag: String)
-      extends ToYtArg[ConfigEntry[K, Boolean]]:
-    def toArg(t: ConfigEntry[K, Boolean]): Option[String] =
-      if (t.value) Some(flag) else None
-
-  given ToArgFunc[Proxy, Boolean] =
+  given ToYtArg[Proxy, Boolean] =
     new ToggleFlag[Proxy]("--proxy http://127.0.0.1:1087")
-  given ToArgFunc[AutoSub, Boolean] =
+  given ToYtArg[AutoSub, Boolean] =
     new ToggleFlag[AutoSub]("--write-auto-subs --convert-subs srt")
-  given ToArgFunc[Retry, Boolean] = new ToggleFlag[Retry](
+  given ToYtArg[Retry, Boolean] = new ToggleFlag[Retry](
     "--fragment-retries infinite -R infinite --file-access-retries infinite"
   )
-  given ToArgFunc[RemuxMp4, Boolean] =
+  given ToYtArg[RemuxMp4, Boolean] =
     new ToggleFlag[RemuxMp4]("--remux-video mp4")
 
-  given ToArgFunc[Connection, Int] = new {
-    def toArg(e: ConfigEntry[Connection, Int]): Option[String] = Some(
-      s"-N ${e.value}"
+  given ToYtArg[Connection, Int] = new {
+    def toArg(v: Int): Option[String] = Some(
+      s"-N ${v}"
     )
   }
 
-  given ToArgFunc[Cookie, Boolean] =
+  given ToYtArg[Cookie, Boolean] =
     new ToggleFlag[Cookie]("--cookies-from-browser firefox")
-  given ToArgFunc[Format, String] = new {
-    def toArg(e: ConfigEntry[Format, String]): Option[String] = Some(
-      s"-f ${e.value}"
+  given ToYtArg[Format, String] = new {
+    def toArg(v: String): Option[String] = Some(
+      s"-f ${v}"
     )
   }
 
-  given ToArgFunc[RecodeMp4, Boolean] =
+  given ToYtArg[RecodeMp4, Boolean] =
     new ToggleFlag[RecodeMp4]("--recode-video mp4")
 
-  given ToArgFunc[Prefix, String] = new {
+  given ToYtArg[Prefix, String] = new {
     def getCurrentFolder(): String =
       val folderName =
         Paths.get("").toAbsolutePath().getFileName().toString()
       if (folderName.isEmpty) then "" else folderName + "-"
 
-    def toArg(e: ConfigEntry[Prefix, String]): Option[String] =
-      Some(e.value match
+    def toArg(v: String): Option[String] =
+      Some(v match
         case "." =>
           s"-o '${getCurrentFolder()}%(playlist_index)s-%(title)s.%(ext)s'"
 

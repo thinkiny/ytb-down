@@ -1,8 +1,10 @@
-import java.net.URL
+import caseapp.core.Error.MalformedValue
 import caseapp.core.argparser.ArgParser
 import caseapp.core.argparser.SimpleArgParser
+
+import java.net.URL
 import scala.util.Try
-import caseapp.core.Error.MalformedValue
+
 object AppOptions:
   given ArgParser[URL] = SimpleArgParser.from[URL]("url") { s =>
     Try(URL(s)).toEither.left.map(t => MalformedValue("URL", t.getMessage()))
@@ -22,9 +24,9 @@ case class AppOptions(
       case _                 => DemosticConfig
 
   def toYtArgs(): String =
-    if (listFormat) then "--list-formats"
+    if (listFormat) then "--list-formats --cookies-from-browser firefox"
     else {
-      val userConfig = List.newBuilder[ConfigEntry[_, _]]
+      val userConfig = List.newBuilder[ConfigEntry[_]]
       if (noAutoSub) userConfig += ConfigEntry[AutoSub](false)
       if (proxy) userConfig += ConfigEntry[Proxy](false)
       if (prefix.nonEmpty)
@@ -32,6 +34,6 @@ case class AppOptions(
       if (format.nonEmpty)
         userConfig += ConfigEntry[Format](format)
       (getPredefConfig() ++ userConfig.result()).values
-        .flatMap(_.ytArg)
+        .flatMap(_.toYtArg())
         .mkString(" ")
     }
