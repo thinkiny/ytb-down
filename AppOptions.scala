@@ -26,14 +26,15 @@ case class AppOptions(
   def toYtArgs(): String =
     if (listFormat) then "--list-formats --cookies-from-browser firefox"
     else {
-      val userConfig = List.newBuilder[ConfigEntry[_]]
-      if (noAutoSub) userConfig += ConfigEntry[AutoSub](false)
-      if (proxy) userConfig += ConfigEntry[Proxy](false)
+      val configs = getPredefConfig()
+      if (noAutoSub) configs += ConfigEntry[AutoSub](false)
+      if (proxy) configs += ConfigEntry[Proxy](false)
       if (prefix.nonEmpty)
-        userConfig += ConfigEntry[Prefix](prefix)
+        configs += ConfigEntry[Prefix](prefix)
       if (format.nonEmpty)
-        userConfig += ConfigEntry[Format](format)
-      (getPredefConfig() ++ userConfig.result()).values
+        configs += ConfigEntry[Format](format)
+
+      configs.dict.values
         .flatMap(_.toYtArg())
         .mkString(" ")
     }

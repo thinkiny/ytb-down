@@ -3,11 +3,14 @@ import scala.collection.mutable.HashMap
 type ConfigMap = HashMap[String, ConfigEntry[_]]
 
 class ConfigSet(entries: ConfigEntry[_]*):
-  val configMap = entries.map(entry => entry.key -> entry).to(HashMap)
+  val dict = entries.map(entry => entry.key -> entry).to(HashMap)
   def ++(entries: List[ConfigEntry[_]]): ConfigMap = ++(entries: _*)
+  def +=(entry: ConfigEntry[_]): this.type =
+    dict.put(entry.key, entry)
+    this
   def ++(entries: ConfigEntry[_]*): ConfigMap =
-    entries.foreach(entry => configMap.update(entry.key, entry))
-    configMap
+    entries.foreach(entry => dict.update(entry.key, entry))
+    dict
 
 class DefaultConfig
     extends ConfigSet(
