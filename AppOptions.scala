@@ -16,6 +16,7 @@ case class AppOptions(
     proxy: Boolean = false,
     prefix: String = "",
     format: String = "",
+    mp4: Boolean = false,
     listFormat: Boolean = false
 ):
   def getPredefConfig(): ConfigSet =
@@ -34,7 +35,8 @@ case class AppOptions(
       if (format.nonEmpty)
         configs += ConfigEntry[Format](format)
 
-      configs.dict.values
+      if (mp4) then configs += ConfigEntry[RecodeMp4](true)
+      configs.optionMap.values
         .flatMap(_.toYtArg())
         .mkString(" ")
     }

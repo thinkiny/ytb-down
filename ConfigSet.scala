@@ -1,16 +1,16 @@
 import scala.collection.mutable.HashMap
 
-type ConfigMap = HashMap[String, ConfigEntry[_]]
+type ConfigMap = HashMap[String, ConfigEntry[?]]
 
-class ConfigSet(entries: ConfigEntry[_]*):
-  val dict = entries.map(entry => entry.key -> entry).to(HashMap)
-  def ++(entries: List[ConfigEntry[_]]): ConfigMap = ++(entries: _*)
-  def +=(entry: ConfigEntry[_]): this.type =
-    dict.put(entry.key, entry)
+class ConfigSet(entries: ConfigEntry[?]*):
+  val optionMap = entries.map(entry => entry.key -> entry).to(HashMap)
+  def ++(entries: List[ConfigEntry[?]]): ConfigMap = ++(entries*)
+  def +=(entry: ConfigEntry[?]): this.type =
+    optionMap.put(entry.key, entry)
     this
-  def ++(entries: ConfigEntry[_]*): ConfigMap =
-    entries.foreach(entry => dict.update(entry.key, entry))
-    dict
+  def ++(entries: ConfigEntry[?]*): ConfigMap =
+    entries.foreach(entry => optionMap.update(entry.key, entry))
+    optionMap
 
 class DefaultConfig
     extends ConfigSet(
