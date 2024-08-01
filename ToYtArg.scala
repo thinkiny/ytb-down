@@ -26,6 +26,7 @@ object ToYtArg:
 
   given ToYtArg[Cookie, Boolean] =
     new ToggleFlag[Cookie]("--cookies-from-browser firefox")
+
   given ToYtArg[Format, String] = new {
     def toArg(v: String): Option[String] = Some(
       s"-f ${v}"
@@ -51,4 +52,8 @@ object ToYtArg:
         case _ =>
           "-o '%(playlist_index)s-%(title)s.%(ext)s'"
       )
+  }
+
+  given ToYtArg[From, Int] = new {
+    def toArg(v: Int): Option[String] = Some(s"-I ${v}::")
   }

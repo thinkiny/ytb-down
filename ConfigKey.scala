@@ -10,6 +10,7 @@ trait Retry extends ConfigKey
 trait RemuxMp4 extends ConfigKey
 trait Format extends ConfigKey
 trait RecodeMp4 extends ConfigKey
+trait From extends ConfigKey
 
 object ConfigKey:
   inline def getName[T <: ConfigKey]: String = ${ getNameImpl[T] }

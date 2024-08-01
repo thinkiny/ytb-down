@@ -22,7 +22,10 @@ class DefaultConfig
     )
 
 object ProxyConfig extends DefaultConfig:
-  ++(ConfigEntry[Proxy](true), ConfigEntry[AutoSub](true))
+  ++(
+    ConfigEntry[Proxy](true),
+    ConfigEntry[AutoSub](true)
+  )
 
 object DemosticConfig extends DefaultConfig:
   ++(ConfigEntry[Cookie](true))

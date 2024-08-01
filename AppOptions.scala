@@ -17,11 +17,12 @@ case class AppOptions(
     prefix: String = "",
     format: String = "",
     mp4: Boolean = false,
-    listFormat: Boolean = false
+    listFormat: Boolean = false,
+    from: Option[Int] = None
 ):
   def getPredefConfig(): ConfigSet =
     url.getHost() match
-      case "www.youtube.com" => ProxyConfig
+      case "www.youtube.com" => ProxyConfig += ConfigEntry[RecodeMp4](true)
       case _                 => DemosticConfig
 
   def toYtArgs(): String =
@@ -34,6 +35,10 @@ case class AppOptions(
         configs += ConfigEntry[Prefix](prefix)
       if (format.nonEmpty)
         configs += ConfigEntry[Format](format)
+
+      from match
+        case Some(i) => configs += ConfigEntry[From](i)
+        case _       =>
 
       if (mp4) then configs += ConfigEntry[RecodeMp4](true)
       configs.optionMap.values
