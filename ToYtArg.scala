@@ -34,7 +34,9 @@ object ToYtArg:
   }
 
   given ToYtArg[RecodeMp4, Boolean] =
-    new ToggleFlag[RecodeMp4]("--recode-video mp4")
+    new ToggleFlag[RecodeMp4](
+      "--recode-video mp4 --postprocessor-args 'VideoConvertor: -c:v h264_videotoolbox'"
+    )
 
   given ToYtArg[Prefix, String] = new {
     def getCurrentFolder(): String =
@@ -55,5 +57,5 @@ object ToYtArg:
   }
 
   given ToYtArg[From, Int] = new {
-    def toArg(v: Int): Option[String] = Some(s"-I ${v}::")
+    def toArg(v: Int): Option[String] = Some(s"-I ${v}::1")
   }

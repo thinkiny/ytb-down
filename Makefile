@@ -1,6 +1,6 @@
 all: ytb-down
 
-ytb-down: YtbDown.scala AppOptions.scala
+ytb-down: *.scala
 	scala-cli package --assembly $? . -f
 
 clean:

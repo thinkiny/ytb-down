@@ -2,23 +2,26 @@ import caseapp.core.Error.MalformedValue
 import caseapp.core.argparser.ArgParser
 import caseapp.core.argparser.SimpleArgParser
 
-import java.net.URL
 import scala.util.Try
+import java.net.URI
 
 object AppOptions:
-  given ArgParser[URL] = SimpleArgParser.from[URL]("url") { s =>
-    Try(URL(s)).toEither.left.map(t => MalformedValue("URL", t.getMessage()))
+  given ArgParser[URI] = SimpleArgParser.from[URI]("url") { s =>
+    Try(URI.create(s)).toEither.left.map(t =>
+      MalformedValue("URL", t.getMessage())
+    )
   }
 
 case class AppOptions(
-    url: URL,
+    url: URI,
     noAutoSub: Boolean = false,
     proxy: Boolean = false,
     prefix: String = "",
     format: String = "",
     mp4: Boolean = false,
     listFormat: Boolean = false,
-    from: Option[Int] = None
+    from: Option[Int] = None,
+    cookie: Boolean = false
 ):
   def getPredefConfig(): ConfigSet =
     url.getHost() match
@@ -35,6 +38,8 @@ case class AppOptions(
         configs += ConfigEntry[Prefix](prefix)
       if (format.nonEmpty)
         configs += ConfigEntry[Format](format)
+      if (cookie)
+        configs += ConfigEntry[Cookie](true)
 
       from match
         case Some(i) => configs += ConfigEntry[From](i)
